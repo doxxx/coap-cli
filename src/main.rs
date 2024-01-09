@@ -5,8 +5,8 @@ use std::path::PathBuf;
 
 #[derive(Debug, Parser)]
 struct Args {
-    #[arg(short, long)]
-    port: Option<u16>,
+    /// COAP resource URL
+    url: String,
 
     #[command(subcommand)]
     command: Commands,
@@ -14,14 +14,11 @@ struct Args {
 
 #[derive(Debug, Subcommand)]
 enum Commands {
-    /// The GET method retrieves a representation for the information that currently corresponds to the resource identified by the request URI.
-    Get { host: String, path: String },
-    /// The POST method requests that the representation enclosed in the request be processed. Either a data string or file path must be provided.
+    /// Retrieves a representation of a resource
+    Get,
+
+    /// Requests that the submitted data be processed
     Post {
-        /// COAP server hostname
-        host: String,
-        /// COAP resource path
-        path: String,
         /// Resource data
         #[arg(short, long)]
         data: Option<String>,
@@ -29,12 +26,9 @@ enum Commands {
         #[arg(short, long)]
         file: Option<PathBuf>,
     },
-    /// The PUT method requests that the resource identified by the request URI be updated or created with the enclosed representation.
+
+    /// Requests that the resource be updated or created with the submitted data
     Put {
-        /// COAP server hostname
-        host: String,
-        /// COAP resource path
-        path: String,
         /// Resource data
         #[arg(short, long)]
         data: Option<String>,
@@ -42,12 +36,12 @@ enum Commands {
         #[arg(short, long)]
         file: Option<PathBuf>,
     },
-    /// The DELETE method requests that the resource identified by the request URI be deleted.
-    Delete { host: String, path: String },
+
+    /// Requests that the resource be deleted
+    Delete,
 }
 
-fn coap_get(host: &str, path: &str, port: u16) -> Result<()> {
-    let url = format!("coap://{}:{}/{}", host, port, path);
+fn coap_get(url: &str) -> Result<()> {
     eprintln!("GET {}", url);
 
     let response = CoAPClient::get(&url)?;
@@ -58,8 +52,7 @@ fn coap_get(host: &str, path: &str, port: u16) -> Result<()> {
     Ok(())
 }
 
-fn coap_post(host: &str, path: &str, port: u16, data: &str) -> Result<()> {
-    let url = format!("coap://{}:{}/{}", host, port, path);
+fn coap_post(url: &str, data: &str) -> Result<()> {
     eprintln!("POST {}", url);
 
     let response = CoAPClient::post(&url, data.as_bytes().to_vec())?;
@@ -70,8 +63,7 @@ fn coap_post(host: &str, path: &str, port: u16, data: &str) -> Result<()> {
     Ok(())
 }
 
-fn coap_put(host: &str, path: &str, port: u16, data: &str) -> Result<()> {
-    let url = format!("coap://{}:{}/{}", host, port, path);
+fn coap_put(url: &str, data: &str) -> Result<()> {
     eprintln!("PUT {}", url);
 
     let response = CoAPClient::put(&url, data.as_bytes().to_vec())?;
@@ -82,8 +74,7 @@ fn coap_put(host: &str, path: &str, port: u16, data: &str) -> Result<()> {
     Ok(())
 }
 
-fn coap_delete(host: &str, path: &str, port: u16) -> Result<()> {
-    let url = format!("coap://{}:{}/{}", host, port, path);
+fn coap_delete(url: &str) -> Result<()> {
     eprintln!("DELETE {}", url);
 
     let response = CoAPClient::delete(&url)?;
@@ -107,16 +98,9 @@ fn load_data_file(file: &PathBuf) -> Result<String> {
 }
 
 fn execute_command(cli: &Args) -> Result<()> {
-    let port = cli.port.unwrap_or(5683);
-
     match &cli.command {
-        Commands::Get { host, path } => coap_get(host, path, port),
-        Commands::Post {
-            host,
-            path,
-            data,
-            file,
-        } => {
+        Commands::Get => coap_get(&cli.url),
+        Commands::Post { data, file } => {
             let data = {
                 if let Some(data) = data {
                     Some(data.to_owned())
@@ -132,14 +116,9 @@ fn execute_command(cli: &Args) -> Result<()> {
                 "must specify either data string or file path",
             ))?;
 
-            coap_post(host, path, port, &data)
+            coap_post(&cli.url, &data)
         }
-        Commands::Put {
-            host,
-            path,
-            data,
-            file,
-        } => {
+        Commands::Put { data, file } => {
             let data = {
                 if let Some(data) = data {
                     Some(data.to_owned())
@@ -155,9 +134,9 @@ fn execute_command(cli: &Args) -> Result<()> {
                 "must specify either data string or file path",
             ))?;
 
-            coap_put(host, path, port, &data)
+            coap_put(&cli.url, &data)
         }
-        Commands::Delete { host, path } => coap_delete(host, path, port),
+        Commands::Delete => coap_delete(&cli.url),
     }
 }
 
