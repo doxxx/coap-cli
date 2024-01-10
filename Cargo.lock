@@ -190,6 +190,9 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "coap",
+ "coap-lite",
+ "regex",
+ "url",
 ]
 
 [[package]]
