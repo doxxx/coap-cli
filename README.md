@@ -5,7 +5,7 @@ responses.
 
 ## Usage
 
-```
+```plain
 Usage: coap-cli.exe [OPTIONS] <URL> <COMMAND>
 
 Commands:
@@ -25,7 +25,7 @@ Options:
 
 Some commands have their own options:
 
-```
+```plain
 Usage: coap-cli.exe <URL> post [OPTIONS]
 
 Options:
@@ -43,7 +43,7 @@ Options:
           Print help
 ```
 
-```
+```plain
 Usage: coap-cli.exe <URL> put [OPTIONS]
 
 Options:
@@ -63,20 +63,20 @@ Options:
 
 ## Examples
 
-```
+```shell
 $ coap-cli coap://10.1.2.3/version get
 GET coap://10.1.2.3/version
 2.05
 {"version":"1.2.3.4"}
 ```
 
-```
+```shell
 $ coap-cli coap://10.1.2.3/some/resource post -f path/to/data
 POST coap://10.1.2.3/some/resource
 2.04
 ```
 
-```
+```shell
 $ coap-cli coap://10.1.2.3/some/resource put -d '{"name":"stuff"}'
 PUT coap://10.1.2.3/some/resource
 2.04
