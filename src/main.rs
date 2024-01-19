@@ -17,7 +17,7 @@ struct Args {
     url: String,
 
     /// Receive timeout in seconds
-    #[arg(global = true, short, long, default_value_t = DEFAULT_RECEIVE_TIMEOUT)]
+    #[arg(global = true, long, default_value_t = DEFAULT_RECEIVE_TIMEOUT)]
     timeout: u64,
 
     #[command(subcommand)]
@@ -39,7 +39,7 @@ enum Commands {
         #[arg(long, value_delimiter = ',')]
         accept: Vec<String>,
         /// Content format of the submitted data
-        #[arg(short, long)]
+        #[arg(long)]
         content_format: Option<String>,
         /// Resource data
         #[arg(short, long)]
@@ -55,7 +55,7 @@ enum Commands {
         #[arg(long, value_delimiter = ',')]
         accept: Vec<String>,
         /// Content format of the submitted data
-        #[arg(short, long)]
+        #[arg(long)]
         content_format: Option<String>,
         /// Resource data
         #[arg(short, long)]
