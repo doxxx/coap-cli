@@ -6,7 +6,7 @@ responses.
 ## Usage
 
 ```
-Usage: coap-cli <URL> <COMMAND>
+Usage: coap-cli.exe [OPTIONS] <URL> <COMMAND>
 
 Commands:
   get     Retrieves a representation of a resource
@@ -19,7 +19,8 @@ Arguments:
   <URL>  COAP resource URL
 
 Options:
-  -h, --help  Print help
+      --timeout <TIMEOUT>  Receive timeout in seconds [default: 1]
+  -h, --help               Print help
 ```
 
 Some commands have their own options:
@@ -28,18 +29,36 @@ Some commands have their own options:
 Usage: coap-cli.exe <URL> post [OPTIONS]
 
 Options:
-  -d, --data <DATA>  Resource data
-  -f, --file <FILE>  Path to file containing resource data
-  -h, --help         Print help
+      --accept <ACCEPT>
+          Acceptable content formats (comma-separated) for the response
+      --timeout <TIMEOUT>
+          Receive timeout in seconds [default: 1]
+      --content-format <CONTENT_FORMAT>
+          Content format of the submitted data
+  -d, --data <DATA>
+          Resource data
+  -f, --file <FILE>
+          Path to file containing resource data
+  -h, --help
+          Print help
 ```
 
 ```
 Usage: coap-cli.exe <URL> put [OPTIONS]
 
 Options:
-  -d, --data <DATA>  Resource data
-  -f, --file <FILE>  Path to file containing resource data
-  -h, --help         Print help
+      --accept <ACCEPT>
+          Acceptable content formats (comma-separated) for the response
+      --timeout <TIMEOUT>
+          Receive timeout in seconds [default: 1]
+      --content-format <CONTENT_FORMAT>
+          Content format of the submitted data
+  -d, --data <DATA>
+          Resource data
+  -f, --file <FILE>
+          Path to file containing resource data
+  -h, --help
+          Print help
 ```
 
 ## Examples
