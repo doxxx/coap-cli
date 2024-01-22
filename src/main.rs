@@ -12,6 +12,7 @@ use url::Url;
 const DEFAULT_RECEIVE_TIMEOUT: u64 = 1;
 
 #[derive(Debug, Parser)]
+#[command(author, version, about)]
 struct Args {
     /// COAP resource URL
     url: String,
