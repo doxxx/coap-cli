@@ -2,6 +2,13 @@
 name = "coap-cli"
 version = "0.1.0"
 edition = "2021"
+authors = ["Gordon Tyler <gordon.tyler@synaptivemedical.com>"]
+license = "MIT"
+categories = ["command-line-utilities", "network-programming"]
+description = "A simple command-line tool to send CoAP requests via UDP and display the responses."
+keywords = ["coap", "cli"]
+readme = "README.md"
+repository = "https://bitbucket.org/gordon_tyler/coap-cli"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
