@@ -1,11 +1,16 @@
 mod coap_helper;
 
 use clap::{Parser, Subcommand};
+use coap::client::ObserveMessage;
 use coap::UdpCoAPClient;
-use coap_lite::RequestType;
+use coap_lite::{Packet, RequestType};
+use time::format_description::well_known::Iso8601;
+use time::OffsetDateTime;
 use std::io::{Error, ErrorKind, Result};
 use std::path::PathBuf;
 use std::time::Duration;
+use tokio::signal::ctrl_c;
+
 
 use coap_helper::*;
 
@@ -30,6 +35,13 @@ enum Commands {
     /// Retrieves a representation of a resource
     Get {
         /// Acceptable content formats (comma-separated) for the response
+        #[arg(long, value_delimiter = ',')]
+        accept: Vec<String>,
+    },
+
+    /// Observes a resource and retrieves its representation whenever it changes
+    Observe {
+        /// Acceptable content formats (comma-separated) for the responses
         #[arg(long, value_delimiter = ',')]
         accept: Vec<String>,
     },
@@ -84,6 +96,28 @@ async fn coap_get(client: &mut UdpCoAPClient, args: &Args, accept: &[String]) ->
     let content = String::from_utf8_lossy(&response.message.payload);
     eprintln!("{}", response.message.header.get_code());
     println!("{}", content);
+
+    Ok(())
+}
+
+async fn coap_observe(client: &mut UdpCoAPClient, args: &Args, accept: &[String]) -> Result<()> {
+    eprintln!("OBSERVE {}", args.url);
+
+    let accept_cf = accept.iter().map(|a| parse_content_format(a)).collect::<Result<Vec<_>>>()?;
+    let request = build_coap_request_for_url(&args.url, RequestType::Get, None, None, Some(accept_cf))?;
+
+    let handler = |p: Packet| {
+        let content = String::from_utf8_lossy(&p.payload);
+        let now = OffsetDateTime::now_local().unwrap().format(&Iso8601::DEFAULT).unwrap();
+        eprintln!("{}: {}", now, p.header.get_code());
+        println!("{}", content);
+    };
+
+    let sender = client.observe_with(request, handler).await?;
+
+    ctrl_c().await.expect("failed to listen for ctrl-c");
+
+    sender.send(ObserveMessage::Terminate).unwrap();
 
     Ok(())
 }
@@ -168,6 +202,7 @@ async fn execute_command(args: &Args) -> Result<()> {
 
     match &args.command {
         Commands::Get { accept } => coap_get(&mut client, args, accept).await,
+        Commands::Observe { accept } => coap_observe(&mut client, args, accept).await,
         Commands::Post {
             accept,
             content_format,
