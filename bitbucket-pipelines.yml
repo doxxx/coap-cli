@@ -8,6 +8,7 @@ pipelines:
           - rust-target
         script:
           - echo "Installing pre-requisites"        ; apt-get update && apt-get install -y gcc-mingw-w64-x86-64
+          - echo "Adding rust targets"              ; rustup target add x86_64-pc-windows-gnu
           - echo "Build for x86_64-pc-windows-gnu"  ; cargo build --release --target x86_64-pc-windows-gnu
         artifacts:
           - target/x86_64-pc-windows-gnu/release/coap-cli.exe
