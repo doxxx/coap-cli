@@ -19,8 +19,7 @@ pipelines:
         script:
           - pipe: atlassian/bitbucket-upload-file:0.7.5
             variables:
-              ATLASSIAN_ACCOUNT_EMAIL: $ATLASSIAN_EMAIL
-              ATLASSIAN_API_TOKEN: $ATLASSIAN_API_TOKEN
+              BITBUCKET_ACCESS_TOKEN: $BITBUCKET_ACCESS_TOKEN
               FILENAME: "target/x86_64-pc-windows-gnu/release/coap-cli.exe"
 
 definitions:
