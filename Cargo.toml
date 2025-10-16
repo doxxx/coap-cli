@@ -13,8 +13,10 @@ repository = "https://bitbucket.org/gordon_tyler/coap-cli"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "4.4.13", features = ["derive"] }
-coap = "0.13.0"
-coap-lite = "0.11.3"
-regex = "1.10.2"
-url = "2.5.0"
+tokio = { version = "1.48.0", features = ["full"] }
+clap = { version = "4.5.49", features = ["derive"] }
+coap = "0.22.0"
+coap-lite = "0.13.3"
+regex = "1.12.2"
+url = "2.5.7"
+time = { version = "0.3.44", features = ["formatting", "local-offset"] }
