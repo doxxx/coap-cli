@@ -10,6 +10,7 @@ Usage: coap-cli.exe [OPTIONS] <URL> <COMMAND>
 
 Commands:
   get     Retrieves a representation of a resource
+  observe Registers to receive a representation of a resource whenever the resource changes
   post    Requests that the submitted data be processed
   put     Requests that the resource be updated or created with the submitted data
   delete  Requests that the resource be deleted
@@ -23,7 +24,29 @@ Options:
   -h, --help               Print help
 ```
 
-Some commands have their own options:
+### Get
+
+```plain
+Usage: coap-cli.exe <URL> get [OPTIONS]
+
+Options:
+      --accept <ACCEPT>    Acceptable content formats (comma-separated) for the response
+      --timeout <TIMEOUT>  Receive timeout in seconds [default: 1]
+  -h, --help               Print help
+```
+
+### Observe
+
+```plain
+Usage: coap-cli.exe <URL> observe [OPTIONS]
+
+Options:
+      --accept <ACCEPT>    Acceptable content formats (comma-separated) for the responses
+      --timeout <TIMEOUT>  Receive timeout in seconds [default: 1]
+  -h, --help               Print help
+```
+
+### Post
 
 ```plain
 Usage: coap-cli.exe <URL> post [OPTIONS]
@@ -43,6 +66,8 @@ Options:
           Print help
 ```
 
+### Put
+
 ```plain
 Usage: coap-cli.exe <URL> put [OPTIONS]
 
@@ -59,6 +84,17 @@ Options:
           Path to file containing resource data
   -h, --help
           Print help
+```
+
+### Delete
+
+```plain
+Usage: coap-cli.exe <URL> delete [OPTIONS]
+
+Options:
+      --accept <ACCEPT>    Acceptable content formats (comma-separated) for the response
+      --timeout <TIMEOUT>  Receive timeout in seconds [default: 1]
+  -h, --help               Print help
 ```
 
 ## Examples
