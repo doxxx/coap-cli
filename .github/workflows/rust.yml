@@ -10,25 +10,34 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build_windows:
-    name: Build (Windows)
-    runs-on: windows-latest
+  build:
+    name: Build
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
     - name: Cache Cargo
       id: cache-cargo
       uses: actions/cache@v4
       with:
-        path: ~/.cargo
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
     - name: Build
       run: cargo build --verbose --release
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4.6.2
+    - name: Upload binary
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: coap-cli
+        path: target/release/coap-cli
+    - name: Upload binary
+      if: ${{ matrix.os == 'windows-latest' }}
+      uses: actions/upload-artifact@v4
       with:
         name: coap-cli.exe
         path: target/release/coap-cli.exe
