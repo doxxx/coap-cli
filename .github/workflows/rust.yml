@@ -33,22 +33,28 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: actions/upload-artifact@v4
         with:
-          name: coap-cli
+          name: coap-cli-linux-x64
           path: target/release/coap-cli
       - name: Upload binary
         if: ${{ matrix.os == 'windows-latest' }}
         uses: actions/upload-artifact@v4
         with:
-          name: coap-cli.exe
+          name: coap-cli-windows-x64
           path: target/release/coap-cli.exe
   release:
     name: Release
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - name: Merge built artifacts
+      - name: Download built artifacts
         uses: actions/download-artifact@v5
         with:
           path: dist/binaries
       - name: Display structure of downloaded files
         run: ls -R dist/binaries
+      - name: Create distribution archives
+        run: |
+          tar -zcf dist/archives/coap-cli-linux-x64-${{ github.ref_name }}.tgz -C dist/binaries/coap-cli-linux-x64 *
+          zip -j dist/archives/coap-cli-windows-x64-${{ github.ref_name }}.zip dist/binaries/coap-cli-windows-x64/*
+      - name: Display structure of distribution files
+        run: ls -lR dist/archives
