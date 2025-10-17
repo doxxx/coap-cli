@@ -15,5 +15,15 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Cache Cargo
+      id: cache-cargo
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo
+    - name: Cache Build Output
+      id: cache-rust-target
+      uses: actions/cache@v4
+      with:
+        path: target
     - name: Build
       run: cargo build --verbose
