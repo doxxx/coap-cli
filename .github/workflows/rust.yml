@@ -54,6 +54,7 @@ jobs:
         run: ls -R dist/binaries
       - name: Create distribution archives
         run: |
+          mkdir -p dist/archives
           tar -zcf dist/archives/coap-cli-linux-x64-${{ github.ref_name }}.tgz -C dist/binaries/coap-cli-linux-x64 *
           zip -j dist/archives/coap-cli-windows-x64-${{ github.ref_name }}.zip dist/binaries/coap-cli-windows-x64/*
       - name: Display structure of distribution files
